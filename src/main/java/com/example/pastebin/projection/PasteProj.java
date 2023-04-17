@@ -2,11 +2,8 @@ package com.example.pastebin.projection;
 
 import com.example.pastebin.dto.PasteDTO;
 
-import java.util.Date;
-import java.util.UUID;
-
 public interface PasteProj {
-    UUID getId();
+    String getId();
 
     String getTitle();
 
