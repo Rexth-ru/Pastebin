@@ -6,6 +6,7 @@ import com.example.pastebin.model.Paste;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
+
 @Data
 public class CreatePaste {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

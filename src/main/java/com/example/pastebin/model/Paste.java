@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.Instant;
 import java.time.LocalDateTime;
 @Entity
 @Data
@@ -16,6 +17,6 @@ public class Paste {
     private String body;
     private Time expirationTime;
     private Access status;
-    private LocalDateTime createDate;
-    private LocalDateTime expiredDate;
+    private Instant expiredDate;
+    private Instant createDate;
 }

@@ -14,7 +14,7 @@ public class PasteController {
         this.pasteService = pasteService;
     }
     @PostMapping
-    public ResponseEntity<?> newPaste(CreatePaste createPaste){
+    public ResponseEntity<?> newPaste(@RequestBody CreatePaste createPaste){
         return ResponseEntity.ok(pasteService.createPaste(createPaste));
     }
     @GetMapping

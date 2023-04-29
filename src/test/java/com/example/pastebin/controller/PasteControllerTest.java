@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -31,10 +31,11 @@ class PasteControllerTest {
     MockMvc mockMvc;
     @Autowired
     PasteRepository pasteRepository;
-    private final Paste paste=new Paste();
-    private  final Paste paste2 = new Paste();
+    private final Paste paste = new Paste();
+    private final Paste paste2 = new Paste();
     private final JSONObject jsonObject = new JSONObject();
     private final Collection<Paste> pastes = new ArrayList<>();
+
     @BeforeEach
     void setUp() throws JSONException {
 
@@ -42,8 +43,9 @@ class PasteControllerTest {
         paste.setTitle("test");
         paste.setBody("test,test");
         paste.setStatus(Access.PUBLIC);
-        paste.setExpirationTime(Time.NO_LIMITS);
-        paste.setCreateDate(LocalDateTime.now());
+        paste.setExpirationTime(Time.ONE_HOUR);
+        paste.setExpiredDate(Instant.now().plus(Time.ONE_HOUR.getTime(), Time.ONE_HOUR.getChronoUnit()));
+        paste.setCreateDate(Instant.now());
         pasteRepository.save(paste);
 
         Paste paste1 = new Paste();
@@ -52,35 +54,39 @@ class PasteControllerTest {
         paste1.setBody("test1,test1");
         paste1.setStatus(Access.PUBLIC);
         paste1.setExpirationTime(Time.TEN_MINUTE);
-        paste1.setCreateDate(LocalDateTime.now());
+        paste1.setExpiredDate(Instant.now().plus(Time.TEN_MINUTE.getTime(), Time.TEN_MINUTE.getChronoUnit()));
+        paste1.setCreateDate(Instant.now());
         pasteRepository.save(paste1);
 
         paste2.setId(RandomStringUtils.randomAlphanumeric(8));
         paste2.setTitle("test3");
         paste2.setBody("test3,test3");
         paste2.setStatus(Access.UNLISTED);
-        paste2.setExpirationTime(Time.NO_LIMITS);
-        paste2.setCreateDate(LocalDateTime.now());
+        paste2.setExpirationTime(Time.ONE_MONTH);
+        paste2.setExpiredDate(Instant.now().plus(Time.ONE_MONTH.getTime(), Time.ONE_MONTH.getChronoUnit()));
+        paste2.setCreateDate(Instant.now());
         pasteRepository.save(paste2);
 
         pastes.add(paste);
         pastes.add(paste1);
         pastes.add(paste2);
 
-        jsonObject.put("title","test2");
-        jsonObject.put("body","test2test");
-        jsonObject.put("status",Access.PUBLIC);
-        jsonObject.put("expirationTime",Time.NO_LIMITS);
+        jsonObject.put("title", "test2");
+        jsonObject.put("body", "test2test");
+        jsonObject.put("status", Access.PUBLIC);
+        jsonObject.put("expirationTime", Time.THREE_HOUR);
     }
+
     @BeforeEach
-    void clearPaste(){
+    void clearPaste() {
         pasteRepository.deleteAll();
     }
+
     @Test
     void newPaste() throws Exception {
         mockMvc.perform(post("/my-awesome-pastebin.tld")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonObject.toString()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonObject.toString()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
     }
@@ -99,9 +105,10 @@ class PasteControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(3));
     }
+
     @Test
     void getPasteUnlisted() throws Exception {
-        mockMvc.perform(get("/my-awesome-pastebin.tld/code/{id}",paste2.getId()))
+        mockMvc.perform(get("/my-awesome-pastebin.tld/code/{id}", paste2.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(paste2.getId()));
     }
