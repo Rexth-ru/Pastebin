@@ -40,7 +40,7 @@ class PasteControllerTest {
     void setUp() throws JSONException {
 
         paste.setId(RandomStringUtils.randomAlphanumeric(8));
-        paste.setTitle("test");
+        paste.setTitle("test1");
         paste.setBody("test,test");
         paste.setStatus(Access.PUBLIC);
         paste.setExpirationTime(Time.ONE_HOUR);
@@ -101,9 +101,9 @@ class PasteControllerTest {
 
     @Test
     void getPastTitleOrBody() throws Exception {
-        mockMvc.perform(get("/my-awesome-pastebin.tld/{text}", paste.getTitle()))
+        mockMvc.perform(get("/my-awesome-pastebin.tld/test"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(3));
+                .andExpect(jsonPath("$.size()").value(2));
     }
 
     @Test
