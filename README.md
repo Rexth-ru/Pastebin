@@ -9,8 +9,12 @@ Cервис позволяет заливать куски текста/кода
 5. Просроченные "пасты" удаляются с помощью scheduled
 6. Проект упакован в Docker
 ## Используемые технологии
+* Java 11
+* Maven
 * Spring Boot
 * Spring Data JPA
+* REST
+* GIT
 * H2 Database
 * Junit
 * Mockito
